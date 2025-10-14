@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { checkPremium } from "./utils/check-premium";
 
 // Mood options for caption generation
 const MOODS = [
@@ -84,11 +85,12 @@ export default function HomeScreen() {
   const generateVibe = async () => {
     setMood(selectedMood);
     const count = await getGenerationCount();
+    const isPremium = checkPremium();
     const MAXCOUNT = process.env.EXPO_PUBLIC_FREE_LIMIT
       ? parseInt(process.env.EXPO_PUBLIC_FREE_LIMIT)
       : "";
     console.log("count", MAXCOUNT, count);
-    if (MAXCOUNT && count >= MAXCOUNT) {
+    if (!isPremium && MAXCOUNT && count >= MAXCOUNT) {
       router.push("/pro");
     } else {
       router.push("/result");
@@ -146,7 +148,7 @@ export default function HomeScreen() {
         >
           <Text style={styles.generateButtonText}>⚡ Generate Vibe</Text>
         </TouchableOpacity>
-        <ClearStorage />
+        { __DEV__ && <ClearStorage /> }
         {/* Pro Link */}
         <TouchableOpacity
           onPress={() => router.push("/pro")}

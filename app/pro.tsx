@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import Purchases from 'react-native-purchases';
 
 const PRO_FEATURES = [
   { icon: 'infinite', title: 'Unlimited Captions', description: 'Generate as many vibes as you want' },
@@ -11,8 +12,23 @@ const PRO_FEATURES = [
 ];
 
 export default function ProScreen() {
-  const handlePurchase = () => {
-    alert('Purchase flow coming soon! 🚀');
+  const handlePurchase = async () => {
+    // alert('Purchase flow coming soon! 🚀');
+    try {
+      const offerings = await Purchases.getOfferings();
+      const currentOffering = offerings.current;
+      if (currentOffering?.availablePackages.length! > 0) {
+        const purchaseResult = await Purchases.purchasePackage(
+          currentOffering?.availablePackages[0]!
+        );
+        if (purchaseResult.customerInfo.entitlements.active.premium) {
+          alert("🎉 Premium unlocked!");
+        }
+      }
+
+    } catch (e: any) {
+      if (!e.userCancelled) console.error('Purchase failed: ', e);
+    }
   };
 
   return (

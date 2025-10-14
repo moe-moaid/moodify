@@ -19,6 +19,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { checkPremium } from "./utils/check-premium";
 
 export default function ResultScreen() {
   const { image, mood, caption, setCaption } = useMoodifyStore();
@@ -35,10 +36,11 @@ export default function ResultScreen() {
 
     try {
       const count = await getGenerationCount();
+      const isPremium = checkPremium();
       const MAXCOUNT = process.env.EXPO_PUBLIC_FREE_LIMIT
         ? parseInt(process.env.EXPO_PUBLIC_FREE_LIMIT)
         : "";
-      if (MAXCOUNT && count > MAXCOUNT) {
+      if (!isPremium && MAXCOUNT && count >= MAXCOUNT) {
         router.push("/pro");
       } else {
         const generatedCaption = await generateCaption(mood);
