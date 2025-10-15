@@ -19,7 +19,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { checkPremium } from "./utils/check-premium";
+import checkPremium from "./utils/check-premium";
 
 export default function ResultScreen() {
   const { image, mood, caption, setCaption } = useMoodifyStore();

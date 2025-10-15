@@ -13,7 +13,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { checkPremium } from "./utils/check-premium";
+import checkPremium from "./utils/check-premium";
 
 // Mood options for caption generation
 const MOODS = [

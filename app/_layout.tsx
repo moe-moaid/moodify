@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import 'react-native-reanimated';
-import { setupRevenueCat } from './utils/revenuecat';
+import setupRevenueCat  from './utils/revenuecat';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
