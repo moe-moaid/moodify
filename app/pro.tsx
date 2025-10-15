@@ -1,20 +1,46 @@
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import Purchases from 'react-native-purchases';
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Purchases from "react-native-purchases";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const PRO_FEATURES = [
-  { icon: 'infinite', title: 'Unlimited Captions', description: 'Generate as many vibes as you want' },
-  { icon: 'sparkles', title: 'Exclusive Styles', description: 'Access premium mood styles' },
-  { icon: 'flash', title: 'Faster Generation', description: 'Priority AI processing' },
-  { icon: 'save', title: 'Save History', description: 'Keep all your favorite captions' },
+  {
+    icon: "infinite",
+    title: "Unlimited Captions",
+    description: "Generate as many vibes as you want",
+  },
+  {
+    icon: "sparkles",
+    title: "Exclusive Styles",
+    description: "Access premium mood styles",
+  },
+  {
+    icon: "flash",
+    title: "Faster Generation",
+    description: "Priority AI processing",
+  },
+  {
+    icon: "save",
+    title: "Save History",
+    description: "Keep all your favorite captions",
+  },
 ];
 
 export default function ProScreen() {
+  const [loading, setLoading] = useState<boolean>(false);
   const handlePurchase = async () => {
     // alert('Purchase flow coming soon! 🚀');
     try {
+      setLoading(true);
       const offerings = await Purchases.getOfferings();
       const currentOffering = offerings.current;
       if (currentOffering?.availablePackages.length! > 0) {
@@ -25,17 +51,21 @@ export default function ProScreen() {
           alert("🎉 Premium unlocked!");
         }
       }
-
     } catch (e: any) {
-      if (!e.userCancelled) console.error('Purchase failed: ', e);
+      if (!e.userCancelled) console.error("Purchase failed: ", e);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+      >
         {/* Close Button */}
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => router.back()}
           style={styles.closeButton}
         >
@@ -46,25 +76,33 @@ export default function ProScreen() {
         <View style={styles.header}>
           <Text style={styles.emoji}>✨</Text>
           <Text style={styles.title}>Moodify Pro</Text>
-          <Text style={styles.subtitle}>Unlock the full power of AI captions</Text>
+          <Text style={styles.subtitle}>
+            Unlock the full power of AI captions
+          </Text>
         </View>
 
         {/* Features */}
         <View style={styles.featuresContainer}>
           {PRO_FEATURES.map((feature, index) => (
-            <View 
+            <View
               key={index}
               style={[
                 styles.featureItem,
-                index < PRO_FEATURES.length - 1 && styles.featureItemBorder
+                index < PRO_FEATURES.length - 1 && styles.featureItemBorder,
               ]}
             >
               <View style={styles.featureIcon}>
-                <Ionicons name={feature.icon as any} size={24} color="#8B5CF6" />
+                <Ionicons
+                  name={feature.icon as any}
+                  size={24}
+                  color="#8B5CF6"
+                />
               </View>
               <View style={styles.featureContent}>
                 <Text style={styles.featureTitle}>{feature.title}</Text>
-                <Text style={styles.featureDescription}>{feature.description}</Text>
+                <Text style={styles.featureDescription}>
+                  {feature.description}
+                </Text>
               </View>
             </View>
           ))}
@@ -73,7 +111,9 @@ export default function ProScreen() {
         {/* Pricing */}
         <View style={styles.pricingContainer}>
           <Text style={styles.price}>$4.99/month</Text>
-          <Text style={styles.pricingDetails}>Cancel anytime • 7-day free trial</Text>
+          <Text style={styles.pricingDetails}>
+            Cancel anytime • 7-day free trial
+          </Text>
         </View>
 
         {/* Purchase Button */}
@@ -83,6 +123,7 @@ export default function ProScreen() {
           activeOpacity={0.9}
         >
           <Text style={styles.purchaseButtonText}>Start Free Trial</Text>
+          {loading && <ActivityIndicator size="large" color="#8B5CF6" />}
         </TouchableOpacity>
 
         {/* Terms */}
@@ -97,7 +138,7 @@ export default function ProScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: "#8B5CF6",
   },
   scrollView: {
     flex: 1,
@@ -106,11 +147,11 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   closeButton: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     marginBottom: 16,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 32,
   },
   emoji: {
@@ -118,33 +159,33 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 36,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   subtitle: {
-    color: '#E9D5FF',
+    color: "#E9D5FF",
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: "center",
   },
   featuresContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 24,
     padding: 24,
     marginBottom: 32,
   },
   featureItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     paddingVertical: 16,
   },
   featureItemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: "#E5E7EB",
   },
   featureIcon: {
-    backgroundColor: '#F5F3FF',
+    backgroundColor: "#F5F3FF",
     borderRadius: 24,
     padding: 12,
     marginRight: 16,
@@ -153,51 +194,55 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   featureTitle: {
-    color: '#1F2937',
-    fontWeight: '600',
+    color: "#1F2937",
+    fontWeight: "600",
     fontSize: 18,
     marginBottom: 4,
   },
   featureDescription: {
-    color: '#6B7280',
+    color: "#6B7280",
   },
   pricingContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 16,
     padding: 24,
     marginBottom: 24,
   },
   price: {
-    color: '#FFFFFF',
-    textAlign: 'center',
+    color: "#FFFFFF",
+    textAlign: "center",
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   pricingDetails: {
-    color: '#E9D5FF',
-    textAlign: 'center',
+    color: "#E9D5FF",
+    textAlign: "center",
   },
   purchaseButton: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 20,
-    alignItems: 'center',
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 12,
   },
   purchaseButtonText: {
-    color: '#8B5CF6',
-    fontWeight: 'bold',
+    color: "#8B5CF6",
+    fontWeight: "bold",
     fontSize: 20,
   },
   terms: {
-    color: '#E9D5FF',
-    textAlign: 'center',
+    color: "#E9D5FF",
+    textAlign: "center",
     fontSize: 12,
   },
 });

@@ -22,7 +22,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import checkPremium from "./utils/check-premium";
 
 export default function ResultScreen() {
-  const { image, mood, caption, setCaption } = useMoodifyStore();
+  const { mood, caption, setCaption } = useMoodifyStore();
   const [loading, setLoading] = useState(false);
 
   // Generate caption on mount
